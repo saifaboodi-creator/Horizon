@@ -41,7 +41,7 @@
     });
   }
 
-  /** Set up EN/中文 language toggle as a page-level control */
+  /** Set up EN/Arabic language toggle as a page-level control */
   function setupLanguageToggle() {
     // Create toggle buttons
     var toggle = document.createElement('div');
@@ -52,7 +52,7 @@
     btnEn.type = 'button';
 
     var btnZh = document.createElement('button');
-    btnZh.textContent = '中文';
+    btnZh.textContent = 'العربية';
     btnZh.type = 'button';
 
     toggle.appendChild(btnEn);
@@ -61,10 +61,10 @@
     // Insert at top of body
     document.body.insertBefore(toggle, document.body.firstChild);
 
-    // Read saved preference, default to zh
+    // Read saved preference, default to ar
     var saved = null;
     try { saved = localStorage.getItem('horizon-lang'); } catch (e) { /* noop */ }
-    var currentLang = saved === 'en' ? 'en' : 'zh';
+    var currentLang = saved === 'en' ? 'en' : 'ar';
 
     function updateButtons(lang) {
       if (lang === 'en') {
@@ -77,7 +77,7 @@
     }
 
     // Index page: toggle lang-section visibility
-    var zhSection = document.getElementById('lang-zh');
+    var zhSection = document.getElementById('lang-ar');
     var enSection = document.getElementById('lang-en');
 
     function showSection(lang) {
@@ -95,10 +95,10 @@
     function switchArticleLang(lang) {
       var path = window.location.pathname;
       var target = null;
-      if (lang === 'en' && /-zh(?:\.html)?$/.test(path.replace(/\/$/, ''))) {
-        target = path.replace(/-zh(\.html)?$/, '-en$1').replace(/-zh\/$/, '-en/');
-      } else if (lang === 'zh' && /-en(?:\.html)?$/.test(path.replace(/\/$/, ''))) {
-        target = path.replace(/-en(\.html)?$/, '-zh$1').replace(/-en\/$/, '-zh/');
+      if (lang === 'en' && /-ar(?:\.html)?$/.test(path.replace(/\/$/, ''))) {
+        target = path.replace(/-ar(\.html)?$/, '-en$1').replace(/-ar\/$/, '-en/');
+      } else if (lang === 'ar' && /-en(?:\.html)?$/.test(path.replace(/\/$/, ''))) {
+        target = path.replace(/-en(\.html)?$/, '-ar$1').replace(/-en\/$/, '-ar/');
       }
       if (target) window.location.href = target;
     }
@@ -115,7 +115,13 @@
     }
 
     btnEn.addEventListener('click', function () { setLang('en'); });
-    btnZh.addEventListener('click', function () { setLang('zh'); });
+    btnZh.addEventListener('click', function () { setLang('ar'); });
+
+    // Arabic article pages read right-to-left
+    if (/-ar(?:\.html)?$/.test(window.location.pathname.replace(/\/$/, ''))) {
+      var main = document.querySelector('.main-content');
+      if (main) { main.setAttribute('dir', 'rtl'); main.setAttribute('lang', 'ar'); }
+    }
 
     // Initialize
     updateButtons(currentLang);
